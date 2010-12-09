@@ -1,0 +1,139 @@
+/* -*-  Mode:C++; c-basic-offset:8; tab-width:8; indent-tabs-mode:t -*- */
+/*
+ * Copyright(c) 1991-1997 Regents of the University of California.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *      This product includes software developed by the Computer Systems
+ *      Engineering Group at Lawrence Berkeley Laboratory.
+ * 4. Neither the name of the University nor of the Laboratory may be used
+ *    to endorse or promote products derived from this software without
+ *    specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ */
+
+/* $Id$ */
+
+#ifndef ns_sst_h
+#define ns_sst_h
+
+#include "agent.h"
+#include "packet.h"
+#include "flags.h"
+#include "ip.h"
+#include "tcp.h"
+#include "timer-handler.h"
+#include "random.h"
+#include "sha-1.h"
+#include "aes.h"
+#include "time.h"
+
+#define KEYLENGTH	128		// AES Key length
+
+// SST packet header structure
+struct hdr_sst {
+	//SHA1 		hashVal;		// Hash(tagID)
+	u_int16_t	flag_;			// flag
+	keyInstance	sstKeyElm;		// AES Key
+	cipherInstance	sstMsg;		// AES message block
+	int		ackno_;
+
+	// packet header access functions 
+	static int offset_;     // offset for this header
+	inline static int& offset() { return offset_; }
+	inline static hdr_sst* access(const Packet* p) {
+		return (hdr_sst*) p->access(offset_);
+	}
+
+	int& ackno() { return (ackno_); }
+};
+
+// SST ACK packet header structure
+struct hdr_sst_ack {
+	//SHA1		hashVal;		// Hash(readerID || R)
+	u_int16_t	flag_;			// flag
+	u_int16_t	rnd_;			// random number
+	u_int16_t 	readerID_;		// reader ID
+	keyInstance 	sstKeyElm;	// AES Key
+	cipherInstance	sstMsg;		// AES message block
+	int		seqno_;
+	bool		PT_QUERY;		// query message
+	bool		PT_ENC;			// AES encrypted message
+
+	// packet header access functions 
+	static int offset_;             // offset for this header
+	inline static int& offset() { return offset_; }
+	inline static hdr_sst_ack* access(const Packet* p) {
+		return (hdr_sst_ack*) p->access(offset_);
+	}
+
+	int& seqno() { return (seqno_); }
+};
+
+class SstAgent : public Agent {
+public:
+	// constructor - a new SST agent
+	SstAgent();
+
+	// process a function call from OTcl
+	int command(int argc, const char* const* argv);
+
+	// receive a packet
+	virtual void recv(Packet*, Handler*);
+
+	// send a packet
+	virtual void output(int seqno);
+
+	// main method for dealing with rtx timeout
+	//void timeout(int tno);
+
+protected:
+	// current simulator time
+	inline double now() { return Scheduler::instance().clock(); }
+
+	void randT();			// random number by Tag
+	void TID();				// tag ID
+	void metaID(Packet*);	// meta ID
+	void Ek(Packet*, u_int16_t, u_int16_t, u_int16_t);	// AES encryption
+
+	// AES
+	BYTE		pt_[MAX_BLK_CNT*(BLOCK_SIZE/8)];	// plain text
+	BYTE		ct_[MAX_BLK_CNT*(BLOCK_SIZE/8)];	// cipher text
+	BYTE		dctxt_[MAX_BLK_CNT*(BLOCK_SIZE/8)];	// decrypted text output
+	int		byteCnt_;	// byte count
+	int		keySize_;	// AES key size (128, 192, or 256)
+
+	// variables
+	int		seqno_;			// packet sequence number
+	int		ackno_;			// ack number
+	u_int16_t	rID_;		// reader ID
+	u_int16_t	tID_;		// tag ID
+	u_int16_t	rT_;		// random number by Tag
+	//BYTE	rT_;			// random number by Tag
+	u_int16_t	rR_;		// Reader ID
+	int		pkt_size_;		// packet size
+	int 		npacket_;	// number of packet sent
+};
+
+#endif /* ns_sst_h */

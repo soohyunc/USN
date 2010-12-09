@@ -1,0 +1,17 @@
+*********************************************
+*                                           *
+*                                           *
+* SecuTrans Protocol for an RFID/USN Device *
+*                                           *
+*                                           *
+*                             Soo-Hyun Choi *
+*********************************************
+
+This protocol implementation is the Secure Transaction (SecuTrans) Protocol for Ubiqutous Sensor Network (USN). This project is commenced in part for a summer research internship at LG Electronics (Mobile Communication Business) in Korea.
+
+This protocol (SecuTrans) would suit for a user device which has an RFID capable communcation with a tag reader. SecuTrans mainly covers a secure client-server transaction with the combination of cryptography and hashing for privacy and integrity protection.
+
+All technical/implementation questions should be directed to Soo-Hyun Choi, author of SecuTrans, via an e-mail at <s.choi@cs.ucl.ac.uk>. 
+
+Soo-Hyun Choi
+(Jun 17, 2005)

@@ -1,0 +1,13 @@
+TitleText: nobadretransmit
+Device: Postscript
+BoundBox: true
+Ticks: true
+NoLines: true
+Markers: true
+XUnitText: time
+YUnitText: packets
+
+"packets
+
+"drops
+

@@ -1,0 +1,27 @@
+$Id: README 9 2009-11-23 00:47:21Z soohyunc $
+
+=============== OTcl installation for x86_64 machines ===============
+
+
+You would get the below error message when compiling over x86_64 machines.
+
+
+(start: error message)--------------------
+
+checking build system type... Invalid configuration
+`x86_64-unknown-linux-gnu': machine `x86_64-unknown' not recognized
+configure: error: /bin/sh ./config.sub x86_64-unknown-linux-gnu failed 
+
+                                    (end: error message) --------------------
+
+
+
+Then, you would need to replace "config.guess" and "config.sub" with the ones
+in this directory.
+
+o  reference: http://www.gossamer-threads.com/lists/backhand/wackamole/2007
+
+
+Soo-Hyun Choi
+(s.choi@cs.ucl.ac.uk)
+

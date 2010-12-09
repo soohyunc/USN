@@ -1,0 +1,7 @@
+README -- Tk test suite design document.
+
+RCS: @(#) $Id: README 1 2009-10-11 22:06:03Z soohyunc $
+
+This directory contains a set of validation tests for the Tk commands.
+Please see the tests/README file in the Tcl source distribution for
+information about the test suite.

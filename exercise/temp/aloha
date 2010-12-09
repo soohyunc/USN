@@ -1,0 +1,51 @@
+
+proc display {} {
+    global sink0 rate ns_ sink1 rate_1 tcp0 tcp1 tcp2 overall_bandwidth
+                                                                                
+    set time 10
+    set bw [$sink0 set bytes_]
+	set overall_bandwidth [expr $bw + $overall_bandwidth]
+#	set max_seen [$sink0 set maxseen_]
+	set max_ack_seen [ $tcp0 set ack_ ]
+	set max_dupack [ $tcp0 set dupacks_ ]
+    set now [$ns_ now]
+    puts $rate "$now [expr $bw*8/$time/1024] $overall_bandwidth $max_ack_seen $max_dupack"
+	#puts $rate "$now [expr $bw*8/$time/1024]"
+	#set tot [$tcp0 set ack_]
+	#puts $rate "$now $tot"
+    $sink0 set bytes_ 0
+    $ns_ at [expr $now+$time] "display"
+
+#	set tot1 [$tcp0 set ack_]
+#    set tot2 [$tcp1 set ack_]
+#	set tot3 [$tcp2 set ack_]
+#	set now [$ns_ now]
+#	puts $rate "$tot1 $tot2"
+#	$ns_ at [expr $now + 10] "display"
+}
+
+proc cwnd_track {} {
+	global ns_ tcp0 tcp1 awnd_event own_event_1
+	
+	set time 1
+	set now [$ns_ now]
+                                                                                
+    set win0 [$tcp0 set window_]
+    #set thres0 [$tcp0 set ssthresh_]
+                                                                                
+    #set win1 [$tcp1 set cwnd_]
+    #set thres1 [$tcp1 set ssthresh_]
+
+	puts $awnd_event "$now $win0"
+#    puts $own_event_1 "$now $win1 $thres1"
+
+	$ns_ at [expr $now+10] "cwnd_track"
+}
+
+#$node_(2) set X_ 100.031231
+#$node_(2) set Y_ 200.34242
+#$node_(2) set Z_ 10.2312313
+#$ns_ at 100 "display"
+#$ns_ at 100 "cwnd_track"
+#$ns_ at 200 "$ftp1 stop"
+#$ns_ at 110.0 "$node_(2) setdest 400 400 10.00"

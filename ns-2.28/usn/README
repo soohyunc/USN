@@ -1,0 +1,28 @@
+*********************************************************
+Scalable and Secure Transaction (SST) Protocol
+                for an RFID/USN Device
+        Soo-Hyun Choi <s.choi@cs.ucl.ac.uk> 
+
+$Id: README 1 2009-10-11 22:06:03Z soohyunc $
+*********************************************************
+
+The Scalable and Secure Transaction (SST) Protocol is a security protocol for
+Ubiqutous Sensor Network (USN) with RFID technology. This project is commenced
+in part for a summer research internship at LG Electronics (Mobile Communication
+Company) in Korea.
+
+This protocol (SST) would suit to a user device which has an RFID capable
+communcation with a tag reader. SST mainly covers a secure client-server
+transaction with using AES (Advanced Encryption Standard) for privacy and
+integrity protection.
+
+All technical/implementation questions should be directed to Soo-Hyun
+Choi, author of SST Protocol, via an e-mail at <s.choi@cs.ucl.ac.uk> or
+<s.choi@acm.org>.
+
+
+Soo-Hyun Choi
+(Jun 17, 2005)
+
+Note: The SST protocol's base idea came from Dr. Chan Yeob Yeun (LG
+Electronics), and we co-worked to elaborate SST protocol semantics.
